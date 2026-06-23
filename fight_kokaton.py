@@ -84,7 +84,6 @@ class Bird:
         screen.blit(self.img, self.rct)
 
 
-# ビームクラス:
 class Beam:
     """
     こうかとんが放つビームに関するクラス
@@ -95,9 +94,9 @@ class Beam:
         引数 bird：ビームを放つこうかとん（Birdインスタンス）
         """
         self.img = pg.image.load(f"fig/beam.png")
-        self.rct = self.img.rect()#Rectの取得()
+        self.rct = self.img.get_rect()
         self.rct.centery = bird.rct.centery  # ビームの中心縦座標 = こうかとんの中心縦座標
-        self.rct.left = bird.rct.right
+        self.rct.left = bird.rct.right  # ビームの左座標 = こうかとんの右座標
         self.vx, self.vy = +5, 0
 
     def update(self, screen: pg.Surface):
@@ -147,8 +146,6 @@ def main():
     bg_img = pg.image.load("fig/pg_bg.jpg")
     bird = Bird((300, 200))
     bomb = Bomb((255, 0, 0), 10)
-
-    # bombs =[Bomb((255,0,0),10) for _ in  NUM_OF_BOMBS]
     beam = None  # ゲーム初期化時にはビームは存在しない
     clock = pg.time.Clock()
     tmr = 0
@@ -157,29 +154,29 @@ def main():
             if event.type == pg.QUIT:
                 return
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
-            #     # スペースキー押下でBeamクラスのインスタンス生成
+                # スペースキー押下でBeamクラスのインスタンス生成
                 beam = Beam(bird)            
         screen.blit(bg_img, [0, 0])
-        if bomb is not None:  
-            if beam is not None:      
-                if bird.rct.colliderect(bomb.rct):
-                    # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
-                    bird.change_img(8, screen)
-                    pg.display.update()
-                    time.sleep(1)
-                    return
-            
-        if bomb is not None:            
+        
+        if bomb is not None:
+            if bird.rct.colliderect(bomb.rct):
+                # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
+                bird.change_img(8, screen)
+                pg.display.update()
+                time.sleep(1)
+                return
+        
+        if bomb is not None:
             if beam is not None:
-                if beam.rct.colliderect(bomb.rct):
-                    bird.change_image(6,screen)
+                if beam.rct.colliderect(bomb.rct):  # ビームで爆弾を撃ち落としたら
+                    bird.change_img(6, screen)
                     pg.display.update()
-                    beam =  None
+                    beam = None
                     bomb = None
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
-        if beam is not None:    
+        if beam is not None:  # beamが出現していたら
             beam.update(screen)   
         if bomb is not None:
             bomb.update(screen)
