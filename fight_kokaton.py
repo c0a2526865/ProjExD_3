@@ -147,6 +147,8 @@ def main():
     bg_img = pg.image.load("fig/pg_bg.jpg")
     bird = Bird((300, 200))
     bomb = Bomb((255, 0, 0), 10)
+
+    # bombs =[Bomb((255,0,0),10) for _ in  NUM_OF_BOMBS]
     beam = None  # ゲーム初期化時にはビームは存在しない
     clock = pg.time.Clock()
     tmr = 0
@@ -170,6 +172,8 @@ def main():
         if bomb is not None:            
             if beam is not None:
                 if beam.rct.colliderect(bomb.rct):
+                    bird.change_image(6,screen)
+                    pg.display.update()
                     beam =  None
                     bomb = None
 
