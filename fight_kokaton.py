@@ -144,15 +144,15 @@ class Bomb:
 class Score:
 
     def __init__(self):
-        self.fonto = pg.fontFont(None, 50)
+        self.font = pg.font.Font(None, 50)
         self.color  = (0,0,255)
         self.tokuten = 0
         self.img = self.fonto.render("Score:",0,self.color)
         self.zahyou = (100,50)
 
     def update(self,screen : pg.Surface):
-        self.scor = self.fonto.render(f"{self.img}{self.tokuten}",0,self.color)
-        screen.blit(self.img,)
+        score_img = self.fonto.render(f"{self.img}{self.tokuten}",0,self.color)
+        screen.blit(score_img,self.zahyou)
 
 
 def main():
@@ -166,7 +166,7 @@ def main():
     #     bomb = Bomb((255, 0, 0), 10)
     #     bombs.append(bomb)
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
-    score = Score(screen)
+    score = Score()
     beam = None  # ゲーム初期化時にはビームは存在しない
     clock = pg.time.Clock()
     tmr = 0
@@ -191,7 +191,7 @@ def main():
             if beam is not None:
                 if beam.rct.colliderect(bomb.rct):  # ビームで爆弾を撃ち落としたら
                     bird.change_img(6, screen)
-                    score.update()
+                    score.tokuten += 1
                     pg.display.update()
                     beam = None
                     bombs[i] = None
@@ -203,6 +203,7 @@ def main():
             beam.update(screen)   
         for bomb in bombs:
             bomb.update(screen)
+        score.update(screen)
         pg.display.update()
         tmr += 1
         clock.tick(50)
