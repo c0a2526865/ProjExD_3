@@ -147,12 +147,14 @@ class Score:
         self.font = pg.font.Font(None, 50)
         self.color  = (0,0,255)
         self.tokuten = 0
-        self.img = self.fonto.render("Score:",0,self.color)
-        self.zahyou = (100,50)
+        self.zahyou = (100,HEIGHT-50)
 
     def update(self,screen : pg.Surface):
-        score_img = self.fonto.render(f"{self.img}{self.tokuten}",0,self.color)
-        screen.blit(score_img,self.zahyou)
+        score_img = self.font.render(f"score{self.tokuten}",0,self.color)
+        rct = score_img.get_rect()
+        rct.center = (self.zahyou) 
+        screen.blit(score_img,rct)
+
 
 
 def main():
